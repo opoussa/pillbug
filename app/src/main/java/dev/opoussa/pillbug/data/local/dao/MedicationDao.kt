@@ -1,7 +1,9 @@
 package dev.opoussa.pillbug.data.local.dao
 
-import androidx.room.*
-
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
 import dev.opoussa.pillbug.data.local.entity.Medication
 import dev.opoussa.pillbug.data.local.entity.embedded.MedicationWithLatestConsumption
 import kotlinx.coroutines.flow.Flow

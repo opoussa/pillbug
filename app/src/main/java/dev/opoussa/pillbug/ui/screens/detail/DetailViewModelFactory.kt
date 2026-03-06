@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dev.opoussa.pillbug.data.repository.ConsumptionRepository
 import dev.opoussa.pillbug.data.repository.MedicationRepository
-import dev.opoussa.pillbug.ui.screens.add.AddViewModel
 
 /**
  * Boiler? I barely know her :-DDDD

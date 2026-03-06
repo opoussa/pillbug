@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
-import java.sql.Time
 
 @Serializable // For Type-Safe Navigation later
 @Entity(
@@ -14,7 +13,7 @@ import java.sql.Time
             entity = Medication::class,
             parentColumns = ["id"],
             childColumns = ["medicationId"],
-            onDelete = ForeignKey.Companion.CASCADE
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )

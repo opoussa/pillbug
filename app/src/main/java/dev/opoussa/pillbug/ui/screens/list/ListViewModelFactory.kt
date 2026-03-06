@@ -2,8 +2,8 @@ package dev.opoussa.pillbug.ui.screens.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import dev.opoussa.pillbug.data.repository.ConsumptionRepository
 import dev.opoussa.pillbug.data.repository.MedicationRepository
+
 /**
  *   I thought boilerplate was a Java thing.
  */

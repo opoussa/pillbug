@@ -7,18 +7,15 @@ import dev.opoussa.pillbug.data.local.entity.Consumption
 import dev.opoussa.pillbug.data.local.entity.Medication
 import dev.opoussa.pillbug.data.repository.ConsumptionRepository
 import dev.opoussa.pillbug.data.repository.MedicationRepository
-import dev.opoussa.pillbug.ui.components.ConsumptionDTO
-import dev.opoussa.pillbug.ui.components.MedWithConsumptionDTO
 import dev.opoussa.pillbug.ui.components.createMedicationListItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class DetailViewModel (
-    private val args: DetailRoute,
+    args: DetailRoute,
     private val medRepo: MedicationRepository,
     private val consRepo: ConsumptionRepository
 ) : ViewModel() {
@@ -84,7 +81,7 @@ class DetailViewModel (
             }
         }
     }
-    fun deleteMedication(medicationId: Long) {
+    fun deleteMedication() {
         viewModelScope.launch {
             medication?.let {
                 medRepo.deleteMedication(it)

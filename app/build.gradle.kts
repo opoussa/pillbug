@@ -20,6 +20,7 @@ android {
     }
 
     // Room configuration DSL
+    //noinspection WrongGradleMethod
     room {
         schemaDirectory("$projectDir/schemas")
     }
