@@ -1,6 +1,8 @@
 package dev.opoussa.pillbug.ui.screens.detail
 
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,11 +38,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import dev.opoussa.pillbug.ui.components.ErrorComposable
+import dev.opoussa.pillbug.ui.components.YesNoDialog
 import dev.opoussa.pillbug.ui.util.getDateSuffix
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +56,9 @@ fun DetailScreen(
     navController: NavController,
     state: DetailUiState
 ) {
+    val context = LocalContext.current
     var showSheet by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
 
     if(showSheet) {
@@ -67,10 +76,25 @@ fun DetailScreen(
                     .padding(16.dp)
                     .clickable {
                         if (state is DetailUiState.Success) {
-                            viewModel.redactConsumption()
-                            // TODO : Toast "Last consumption redacted"
-                            showSheet = false
+                            try {
+                                viewModel.redactConsumption()
+                                Toast.makeText(
+                                    context,
+                                    "Redacted last consumption",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } catch (e: Exception) {
+                                Toast.makeText(
+                                    context,
+                                    "Failed to redact consumption!",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                Log.e("ERROR", e.toString())
+                            }
+
+
                         }
+                        showSheet = false
                     }
             )
 
@@ -84,13 +108,47 @@ fun DetailScreen(
                     .align(Alignment.CenterHorizontally)
                     .padding(16.dp)
                     .clickable {
-                        viewModel.deleteMedication()
-                        navController.navigateUp()
+                        showDialog = true
                     }
             )
 
         }
 
+    }
+    if(showDialog && state is DetailUiState.Success) {
+
+        val name = state.article.medicationName
+
+        YesNoDialog(title = "Delete Medication?",
+            message = "Are you sure you want to delete $name?",
+            onYes = {
+
+                try {
+
+                    viewModel.deleteMedication()
+                    navController.navigateUp()
+                    Toast.makeText(
+                        context,
+                        "Deleted $name successfully.",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                } catch (e: Exception) {
+
+                    Toast.makeText(
+                        context,
+                        "Failed to delete $name!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    Log.e("ERROR", e.toString())
+
+                }
+            },
+            onNo = {
+                showDialog = false
+                showSheet = false
+            }
+        )
     }
     Box(
         Modifier
@@ -116,11 +174,14 @@ fun DetailScreen(
 
             when (state) {
 
-                is DetailUiState.Loading -> CircularProgressIndicator(
-                    Modifier
+                is DetailUiState.Loading -> {
+                    Box(Modifier
                         .fillMaxSize()
-                        .padding(30.dp)
-                )
+                        .padding(30.dp)) {
+
+                        CircularProgressIndicator(Modifier.align(Alignment.Center))
+                    }
+                }
 
                 is DetailUiState.Error -> ErrorComposable(
                     text = "Error: $state",
